@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bw.mapper.CityMapper">
+	<select id="cityList" resultType="com.bw.pojo.City">
+		SELECT c.*,ROUND(
+		wen*(SELECT wenq FROM c_quan)
+		+jingji*(SELECT jingjiq FROM c_quan)
+		+huan*(SELECT huanq FROM c_quan)
+		+zi*(SELECT ziq FROM c_quan)
+		+sheng*(SELECT shengq FROM c_quan)
+		+anquan*(SELECT anquanq FROM c_quan),
+		1) zong FROM c_city c
+			<if test="huanjian!=null and huanjian!='' and huanjian!='null'">
+			ORDER BY ${huanjian} DESC
+			</if>	
+			<if test="huanjian==null or huanjian=='' or huanjian=='null'">
+				ORDER BY zong DESC
+			</if>
+	</select>
+	<select id="quanList" resultType="com.bw.pojo.Quan">
+		SELECT * from c_quan
+	</select>
+	<update id="saveQuan">
+		update  c_quan set wenq=${wenq},jingjiq=${jingjiq},huanq=${huanq},ziq=${ziq}
+		,shengq=${shengq},anquanq=${anquanq} where qid=1
+	</update>
+	<select id="getCityById" resultType="com.bw.pojo.City">
+		select * from c_city where cid=#{cid}
+	</select>
+	<update id="saveCity">
+		update  c_city set wen=${wen},jingji=${jingji},huan=${huan},zi=${zi}
+		,sheng=${sheng},anquan=${anquan} where cid=#{cid}
+	</update>
+</mapper>
